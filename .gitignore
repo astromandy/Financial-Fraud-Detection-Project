@@ -1,2 +1,6 @@
+__pycache__/
+*.py[cod]
+.DS_Store
+.env
 Machine-Learning/train_transaction.csv
-
+WebApp/sample_data.csv
