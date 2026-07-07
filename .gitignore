@@ -2,5 +2,8 @@ __pycache__/
 *.py[cod]
 .DS_Store
 .env
+.venv/
+.streamlit/secrets.toml
+WebApp/instance/
 Machine-Learning/train_transaction.csv
 WebApp/sample_data.csv

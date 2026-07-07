@@ -1,99 +1,111 @@
-# 💳 Explainable AI – Financial Fraud Detection System
+# Financial Fraud Detection with Explainable AI
 
-## 📌 Project Overview
+This project combines fraud prediction with explainability so the model output is easier to trust, inspect, and present. It includes exploratory notebooks, model development work, and a Streamlit application for real-time scoring with XAI visuals.
 
-This project presents a robust, **explainable AI-driven fraud detection system** designed to detect fraudulent financial transactions with high precision. Built on real-world data and advanced ML algorithms, the system leverages explainability tools like **SHAP** and **LIME** to deliver transparency and trust alongside predictive performance.
+## What this project covers
 
----
+- Fraud detection on the IEEE-CIS + Vesta transaction dataset
+- Model comparison across classical machine learning approaches
+- Explainability with SHAP, LIME, and feature importance views
+- A Streamlit app for interactive fraud scoring
 
-## 🧠 Objectives
+## Dataset
 
-1. Build a high-performance classifier to detect fraudulent transactions.
-2. Evaluate multiple models and optimize performance.
-3. Apply explainable AI to enhance transparency of predictions.
-4. Deliver a web application to make real-time predictions with interpretability.
+- Source: [IEEE-CIS Fraud Detection on Kaggle](https://www.kaggle.com/competitions/ieee-fraud-detection)
+- Main files used in the project:
+  - `train_transaction.csv`
+  - `train_identity.csv`
 
----
+The fraud rate is highly imbalanced, so model evaluation should focus on metrics such as recall, precision, and ROC-AUC instead of accuracy alone.
 
-## 📊 Dataset
+## Repository structure
 
-- Source: [IEEE-CIS + Vesta Corporation](https://www.kaggle.com/competitions/ieee-fraud-detection)
-- Files:
-  - `transaction.csv`: 590,540 transactions, 394 features
-  - `identity.csv`: 144,233 identity records, 41 features
-- Merged on: `TransactionID`
+```text
+Financial-Fraud-Detection-Project/
+├── Explainable AI (XAI)/
+├── Machine-Learning/
+├── WebApp/
+│   ├── app.py
+│   ├── final_model1.sav
+│   └── sample_data.example.csv
+└── README.md
+```
 
-### Class Distribution
-- Legitimate: 96.5%
-- Fraudulent: 3.5% (high class imbalance)
+## Streamlit app
 
----
+The app lives in `WebApp/app.py` and includes two areas:
 
-## 🔍 Exploratory Data Analysis (EDA)
+- `Prediction`: score a single transaction and inspect the most influential features
+- `XAI Dashboard`: explore feature importance, SHAP charts, and LIME explanations
 
-- **Fraud is more frequent on weekends and early month dates.**
-- **Credit cards, mobile devices, and mail.com domains show higher fraud rates.**
-- **Fraudulent transactions average higher amounts than legitimate ones.**
-- Temporal, product, and device usage patterns are strong fraud indicators.
+### Local setup
 
----
+1. Create and activate a virtual environment:
 
-## ⚙️ Data Preprocessing
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
 
-- **Memory optimization** (~50% reduction)
-- **Missing value handling** (flags, KNN imputation, mean filling)
-- **Feature engineering** (transaction ratios, log transforms, PCA)
-- **Class imbalance**: SMOTE oversampling + cost-sensitive learning
+2. Install dependencies:
 
----
+```bash
+pip install -r requirements.txt
+```
 
-## 🤖 Modeling
+The bundled `final_model1.sav` was serialized from a LightGBM-based model, so `lightgbm` is part of the required runtime dependencies.
 
-### Algorithms Compared
-- Random Forest
-- Logistic Regression
-- Decision Tree
-- XGBoost
-- LightGBM ✅ (Best)
+3. Run the app:
 
-### LightGBM Performance
-- Accuracy: 97%
-- AUC-ROC: 0.96
-- Precision: 88%
-- Recall: 81% (→ 90% after optimization)
-- F1-Score: 0.84
+```bash
+streamlit run WebApp/app.py
+```
 
-### Optimization Techniques
-- SMOTE oversampling
-- Feature interactions
-- Threshold tuning
-- Ensemble modeling
+4. Open the local URL shown by Streamlit, usually `http://localhost:8501`.
 
----
+## Runtime files
 
-## 🧠 Explainable AI (XAI)
+- `WebApp/final_model1.sav`: trained fraud model required by the app
+- `WebApp/sample_data.csv`: optional reference dataset for stronger SHAP/LIME examples
+- `WebApp/sample_data.example.csv`: starter template you can duplicate into `sample_data.csv`
 
-### SHAP – Shapley Additive Explanations
-- Global and local interpretability
-- Top feature contributions for each prediction
-- Interactive plots for feature importance
+If `sample_data.csv` is missing, the app now generates a deterministic synthetic fallback dataset and clearly labels the dashboard as demo-only. That keeps the app runnable, but the best explainability results come from real reference rows.
 
-### Other Tools
-- LIME for local explanation
-- Feature importance heatmaps
+## Suggested sample fields
 
----
+The app currently expects these 10 features:
 
-## 🖥️ Web Application (Streamlit)
+- `card1`
+- `card2`
+- `card4`
+- `card6`
+- `addr1`
+- `addr2`
+- `TransactionAmt`
+- `P_emaildomain`
+- `ProductCD`
+- `DeviceType`
 
-A user-friendly dashboard for fraud detection and interpretability:
+Optional label column for dashboard analysis:
 
-### Key Features
-- Real-time transaction scoring
-- Interactive SHAP & LIME visualizations
-- Feature importance charts
-- User input forms with prediction explanations
+- `isFraud`
 
----
+## Portfolio talking points
 
+- Practical fraud detection use case with business relevance
+- Clear emphasis on model transparency, not just raw performance
+- Interactive delivery through Streamlit for demos and interviews
+- Good example of combining predictive ML with explainability techniques
 
+## Current limitations
+
+- The repository does not include the original full training dataset because of file size
+- The web app depends on the serialized model already matching the 10 exposed features
+- SHAP and LIME require their extra Python packages to be installed locally
+
+## Recommended next improvements
+
+- Export a real, anonymized `sample_data.csv` from the modeling pipeline
+- Add model metadata such as training date, feature order, and threshold used in production
+- Save evaluation plots and confusion matrices as static assets for the README
+- Add a lightweight smoke test for the Streamlit app startup
